@@ -11,12 +11,12 @@ import pickle
 import requests
 from datetime import date, datetime
 
-# load the nlp model and tfidf vectorizer from disk
+#Load the nlp model and tfidf vectorizer from disk
 filename = 'nlp_model.pkl'
 clf = pickle.load(open(filename, 'rb'))
 vectorizer = pickle.load(open('tranform.pkl', 'rb'))
 
-# converting list of string to list (eg. "["abc","def"]" to ["abc","def"])
+#Converting list of string to list (Eg. "["abc","def"]" to ["abc","def"])
 
 
 def convert_to_list(my_list):
@@ -25,7 +25,7 @@ def convert_to_list(my_list):
     my_list[-1] = my_list[-1].replace('"]', '')
     return my_list
 
-# convert list of numbers to list (eg. "[1,2,3]" to [1,2,3])
+#Convert list of numbers to list (eg. "[1,2,3]" to [1,2,3])
 
 
 def convert_to_list_num(my_list):
@@ -52,7 +52,7 @@ def home():
 
 @app.route("/recommend", methods=["POST"])
 def recommend():
-    # getting data from AJAX request
+    #Getting Data from AJAX request
     title = request.form['title']
     cast_ids = request.form['cast_ids']
     cast_names = request.form['cast_names']
@@ -77,10 +77,10 @@ def recommend():
     rec_year = request.form['rec_year']
     rec_vote = request.form['rec_vote']
 
-    # get movie suggestions for auto complete
+    #Get movie suggestions for auto complete
     suggestions = get_suggestions()
 
-    # call the convert_to_list function for every string that needs to be converted to list
+    #Call the convert_to_list function for every string that needs to be converted to list
     rec_movies_org = convert_to_list(rec_movies_org)
     rec_movies = convert_to_list(rec_movies)
     rec_posters = convert_to_list(rec_posters)
@@ -91,19 +91,19 @@ def recommend():
     cast_bios = convert_to_list(cast_bios)
     cast_places = convert_to_list(cast_places)
 
-    # convert string to list (eg. "[1,2,3]" to [1,2,3])
+    #Convert string to list (eg. "[1,2,3]" to [1,2,3])
     cast_ids = convert_to_list_num(cast_ids)
     rec_vote = convert_to_list_num(rec_vote)
     rec_year = convert_to_list_num(rec_year)
 
-    # rendering the string to python string
+    #Rendering the string to python string
     for i in range(len(cast_bios)):
         cast_bios[i] = cast_bios[i].replace(r'\n', '\n').replace(r'\"', '\"')
 
     for i in range(len(cast_chars)):
         cast_chars[i] = cast_chars[i].replace(r'\n', '\n').replace(r'\"', '\"')
 
-    # combining multiple lists as a dictionary which can be passed to the html file so that it can be processed easily and the order of information will be preserved
+    #Combining multiple lists as a dictionary which can be passed to the html file so that it can be processed easily and the order of information will be preserved
     movie_cards = {rec_posters[i]: [rec_movies[i], rec_movies_org[i],
                                     rec_vote[i], rec_year[i]] for i in range(len(rec_posters))}
 
@@ -113,7 +113,7 @@ def recommend():
     cast_details = {cast_names[i]: [cast_ids[i], cast_profiles[i], cast_bdays[i],
                                     cast_places[i], cast_bios[i]] for i in range(len(cast_places))}
 
-    # web scraping to get user reviews from IMDB site
+    #Web Scraping to get user reviews from IMDB site
     sauce = urllib.request.urlopen(
         'https://www.imdb.com/title/{}/reviews?ref_=tt_ov_rt'.format(imdb_id)).read()
     soup = bs.BeautifulSoup(sauce, 'lxml')
@@ -124,7 +124,7 @@ def recommend():
     for reviews in soup_result:
         if reviews.string:
             reviews_list.append(reviews.string)
-            # passing the review to our model
+            #Passing the review to our model
             movie_review_list = np.array([reviews.string])
             movie_vector = vectorizer.transform(movie_review_list)
             pred = clf.predict(movie_vector)
