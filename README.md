@@ -25,7 +25,10 @@ Details of the movies(title, genre, runtime, rating, poster, etc) are fetched us
 <code><img height="30" src="https://matplotlib.org/_static/logo2.svg"></code>
 <code><img height="30" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Scikit_learn_logo_small.svg/1280px-Scikit_learn_logo_small.svg.png"></code>
 
+## Live Demo 
+***
 
+Demo Video: https://drive.google.com/drive/folders/1MY581UTamMEKmsUxqafQI38t8yEODzmJ?usp=sharing
 
 ## ✅ Tech stack!
 	* FLask
